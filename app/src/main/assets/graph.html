@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Graph</title>
+    <script type="text/javascript" charset="UTF-8" src="file:///android_asset/jsxgraphcore.js"></script>
+    <script>
+        window.MathJax = {
+          loader: {load: ['[tex]/colorv2']},
+          tex: {packages: {'[+]': ['color']}}
+        };
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="file:///android_asset/tex-chtml.js" id="MathJax-script"></script>
+    <link rel="stylesheet" type="text/css" href="file:///android_asset/jsxgraph.css"/>
+    <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex; /* Use flexbox */
+        flex-direction: column; /* Arrange children vertically */
+    }
+    #box {
+        flex: 1; /* Let the box occupy remaining vertical space */
+        border: 0;
+    }
+    #equation {
+        width: 100%;
+        overflow-x: auto;
+        text-align: center;
+    }
+    .MathJax {
+        font-size: 1em !important;
+    }
+    </style>
+</head>
+<body>
+<div id="equations" style="text-align: center;"></div>
+<div id="box" class="jxgbox"></div>
+
+<script type="text/javascript">
+    var board; // Declare board variable globally
+
+    function initializePlot() {
+        board = JXG.JSXGraph.initBoard('box', {
+            boundingbox: [-10, 10, 10, -10], // Adjusted bounding box to only show x-axis
+            axis: true,
+            showCopyright: false,
+            showNavigation: false,
+            keepaspectratio: true,
+        });
+        board.renderer.container.style.backgroundColor = 'transparent';
+    }
+
+//    function createPlot(functionExpressions, lineColors) {
+//        for (var i = 0; i < functionExpressions.length; i++) {
+//            var f = board.jc.snippet(functionExpressions[i], true, 'x', true);
+//            board.create('functiongraph', [f], {
+//                strokeColor: lineColors[i] || 'blue', // Default to blue if color not provided
+//                strokeWidth: 2
+//            });
+//        }
+//    }
+//
+//    function panPlot(a, b) {
+//        console.log("panPlot", a, b);
+//        const slack = (b - a) * 0.0625;
+//        board.setBoundingBox([a - slack, 5, b + slack, -5]);
+//        board.update();
+//    }
+//
+//    function setEquationTexts(equations, textColors) {
+//        var equationsDiv = document.getElementById('equations');
+//        equationsDiv.innerHTML = ''; // Clear previous equations
+//
+//        for (var i = 0; i < equations.length; i++) {
+//            var equationDiv = document.createElement('div');
+//            equationDiv.innerHTML = '\\( ' + equations[i] + ' \\)';
+//            equationDiv.style.color = textColors[i] || 'black'; // Default to black if color not provided
+//            equationsDiv.appendChild(equationDiv);
+//        }
+//
+//        MathJax.typeset();
+//    }
+
+    initializePlot();
+</script>
+</body>
+</html>

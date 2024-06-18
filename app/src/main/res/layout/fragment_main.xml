@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+        <ScrollView
+            android:id="@+id/mainScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:bind="http://schemas.android.com/tools"
+                android:background="@color/md_theme_surface"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.Material3.DisplayLarge" />
+
+            <include
+                android:id="@+id/menuSingle"
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`2`}"
+                bind:title="@{`Single equation`}" />
+
+            <include
+                android:id="@+id/menuSystem"
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`2`}"
+                bind:title="@{`System of two equations`}" />
+
+            <include
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`3`}"
+                bind:title="@{`Integrate a function`}" />
+
+            <include
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`4`}"
+                bind:title="@{`Approximate a function`}" />
+
+            <include
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`5`}"
+                bind:title="@{`Interpolate a function`}" />
+
+            <include
+                layout="@layout/view_mainmenucard"
+                bind:labNo="@{`6`}"
+                bind:title="@{`Differential equation`}" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Made by Ivan Fedotov"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textColor="@color/md_theme_secondary" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+
+        <!--    <com.google.android.material.card.MaterialCardView-->
+        <!--        android:id="@+id/btn_card_single"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginBottom="16dp"-->
+        <!--        style="?attr/materialCardViewFilledStyle"-->
+        <!--        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"-->
+        <!--        android:transitionName="singleTransition"-->
+        <!--        >-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="150dp"-->
+        <!--            android:text="Single"-->
+        <!--            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="16dp" />-->
+
+        <!--    </com.google.android.material.card.MaterialCardView>-->
+
+
+        <!--    <com.google.android.material.card.MaterialCardView-->
+        <!--        android:id="@+id/btn_card_system"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginBottom="16dp"-->
+        <!--        style="?attr/materialCardViewElevatedStyle"-->
+        <!--        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"-->
+        <!--        >-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="150dp"-->
+        <!--            android:text="System"-->
+        <!--            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="16dp" />-->
+
+        <!--    </com.google.android.material.card.MaterialCardView>-->
+
+
+</layout>
