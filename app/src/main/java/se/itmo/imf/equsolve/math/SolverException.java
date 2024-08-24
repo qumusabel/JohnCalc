@@ -1,4 +1,4 @@
-package se.itmo.imf.equsolve.solvers;
+package se.itmo.imf.equsolve.math;
 
 public class SolverException extends RuntimeException {
     private final String message;

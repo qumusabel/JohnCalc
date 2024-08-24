@@ -1,4 +1,4 @@
-package se.itmo.imf.equsolve.solvers.single;
+package se.itmo.imf.equsolve.math.single_equation;
 
 import android.util.Pair;
 
@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import se.itmo.imf.equsolve.solvers.SolverException;
+import se.itmo.imf.equsolve.math.SolverException;
 
 public class SingleViewModel extends ViewModel {
     private DisplayEquation eqn = null;

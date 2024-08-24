@@ -1,8 +1,8 @@
-package se.itmo.imf.equsolve.solvers.system;
+package se.itmo.imf.equsolve.math.two_equations;
 
 import static java.lang.StrictMath.*;
 
-import se.itmo.imf.equsolve.solvers.SolverException;
+import se.itmo.imf.equsolve.math.SolverException;
 
 class DualSystemSolver {
     private final double x;

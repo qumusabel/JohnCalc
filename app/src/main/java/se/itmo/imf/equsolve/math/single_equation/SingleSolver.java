@@ -1,9 +1,9 @@
-package se.itmo.imf.equsolve.solvers.single;
+package se.itmo.imf.equsolve.math.single_equation;
 
 import static java.lang.StrictMath.abs;
 import static java.lang.StrictMath.signum;
 
-import se.itmo.imf.equsolve.solvers.SolverException;
+import se.itmo.imf.equsolve.math.SolverException;
 
 class SingleSolver {
     private final Equation eqn;

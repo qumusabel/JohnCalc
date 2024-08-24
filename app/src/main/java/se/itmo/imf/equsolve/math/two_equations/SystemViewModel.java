@@ -1,11 +1,10 @@
-package se.itmo.imf.equsolve.solvers.system;
+package se.itmo.imf.equsolve.math.two_equations;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import kotlin.Triple;
-import se.itmo.imf.equsolve.solvers.SolverException;
+import se.itmo.imf.equsolve.math.SolverException;
 
 public class SystemViewModel extends ViewModel {
     private Double x = null;

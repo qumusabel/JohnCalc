@@ -1,4 +1,4 @@
-package se.itmo.imf.equsolve.solvers.single;
+package se.itmo.imf.equsolve.math.single_equation;
 
 import android.os.Bundle;
 

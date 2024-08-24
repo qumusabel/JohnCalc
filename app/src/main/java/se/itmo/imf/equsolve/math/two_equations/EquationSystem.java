@@ -1,4 +1,4 @@
-package se.itmo.imf.equsolve.solvers.system;
+package se.itmo.imf.equsolve.math.two_equations;
 
 import static java.lang.StrictMath.*;
 
