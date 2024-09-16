@@ -1,11 +1,10 @@
 package se.itmo.imf.equsolve.math.integral;
 
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 class Integrator {
 
-    static Result integrate(Function f, double a, double b, double eps, Method method) {
+    public static Result integrate(Function f, double a, double b, double eps, Method method) {
         // Runge denominator = 2^k - 1
         final double kRunge = switch (method) {
             case LEFT_RECTANGLES, MIDDLE_RECTANGLES, RIGHT_RECTANGLES, TRAPEZOIDS -> 3.; // k = 2
@@ -82,7 +81,7 @@ class Integrator {
         SIMPSONS("Simpson's")
         ;
 
-        public String name;
+        public final String name;
         Method(String name) {
             this.name = name;
         }
@@ -93,7 +92,7 @@ class Integrator {
 
     private enum Rectangle {
         LEFT(0), MIDDLE(0.5), RIGHT(1);
-        public double bias;
+        public final double bias;
         Rectangle(double bias) {
             this.bias = bias;
         }
