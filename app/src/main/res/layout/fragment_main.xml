@@ -36,13 +36,14 @@
                 tools:labNo="@{`2`}"
                 tools:title="@{`System of two equations`}" />
 
-                <include
-                    android:id="@+id/menuIntegrate"
-                    layout="@layout/view_mainmenucard"
-                    tools:labNo="@{`3`}"
-                    tools:title="@{`Integrate a function`}" />
+            <include
+                android:id="@+id/menuIntegrate"
+                layout="@layout/view_mainmenucard"
+                tools:labNo="@{`3`}"
+                tools:title="@{`Integrate a function`}" />
 
             <include
+                android:id="@+id/menuApproximate"
                 layout="@layout/view_mainmenucard"
                 tools:labNo="@{`4`}"
                 tools:title="@{`Approximate a function`}" />

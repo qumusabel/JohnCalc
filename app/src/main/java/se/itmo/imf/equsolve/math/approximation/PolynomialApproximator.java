@@ -1,9 +1,9 @@
 package se.itmo.imf.equsolve.math.approximation;
 
+import static java.lang.StrictMath.pow;
+
 import java.util.Arrays;
 import java.util.stream.IntStream;
-
-import static java.lang.StrictMath.pow;
 
 import se.itmo.imf.gauss.Gauss;
 import se.itmo.imf.gauss.Matrix;
@@ -31,7 +31,7 @@ class PolynomialApproximator {
         sums[0] = func.numPoints();
 
         Matrix a = new Matrix(
-                IntStream.range(0, polyDegree)
+                IntStream.rangeClosed(0, polyDegree)
                         .mapToObj(i -> new Vector(Arrays.copyOfRange(sums, i, i + polyDegree + 1)))
                         .toArray(Vector[]::new)
         );

@@ -1,138 +1,58 @@
 package se.itmo.imf.equsolve.math.approximation;
 
-import static java.lang.StrictMath.log;
-import static java.lang.StrictMath.exp;
 import static java.lang.StrictMath.pow;
+import static java.lang.StrictMath.sqrt;
 
 import java.util.Arrays;
 
-interface Approximation {
-    double[] getParams();
-    double at(double x);
+abstract class Approximation {
+    protected TableFunction func;
+    private Double stdDev;
+    private Double score;
 
-    class Linear implements Approximation {
-        double[] params;
-
-        Linear(TableFunction func) {
-            params = PolynomialApproximator.approximate(func, 1);
-        }
-
-        @Override
-        public double[] getParams() {
-            return Arrays.copyOf(this.params, this.params.length);
-        }
-
-        @Override
-        public double at(double x) {
-            return params[0] + params[1] * x;
-        }
+    protected Approximation(TableFunction func) {
+        this.func = func;
     }
 
-    class Quadratic implements Approximation {
-        double[] params;
+    public abstract double at(double x);
+    public abstract double[] getParams();
+    public abstract String describe();
+    public abstract String getJessieCode();
 
-        Quadratic(TableFunction func) {
-            params = PolynomialApproximator.approximate(func, 2);
+    public final double getStdDev() {
+        if (stdDev != null) {
+            return stdDev;
         }
 
-        @Override
-        public double[] getParams() {
-            return Arrays.copyOf(this.params, this.params.length);
-        }
+        Point[] points = getApproximatedPoints();
 
-        @Override
-        public double at(double x) {
-            return params[0] + params[1] * x + params[2] * x * x;
-        }
+        double epsSquareSum = Arrays.stream(points).mapToDouble(p -> pow(p.eps, 2)).sum();
+        stdDev = sqrt(epsSquareSum / points.length);
+        return stdDev;
     }
 
-    class Cubic implements Approximation {
-        double[] params;
-
-        Cubic(TableFunction func) {
-            params = PolynomialApproximator.approximate(func, 3);
+    // By default, we compute R^2
+    public double getScore() {
+        if (score != null) {
+            return score;
         }
 
-        @Override
-        public double[] getParams() {
-            return Arrays.copyOf(this.params, this.params.length);
-        }
+        Point[] points = getApproximatedPoints();
 
-        @Override
-        public double at(double x) {
-            return params[0] + params[1] * x + params[2] * x * x + params[3] * x * x * x;
-        }
+        double numerator = Arrays.stream(points).mapToDouble(p -> pow(p.eps, 2)).sum();
+        double yApproxAvg = Arrays.stream(points).mapToDouble(p -> p.y_).sum() / points.length;
+        double denominator = Arrays.stream(points).mapToDouble(p -> pow(p.y - yApproxAvg, 2)).sum();
+        score = 1 - numerator / denominator;
+        return score;
     }
 
-    class Exponential implements Approximation {
-        final double a, b;
-
-        Exponential(TableFunction func) {
-            func = new TableFunction(
-                    Arrays.stream(func.points()).map(p ->
-                                    new TableFunction.Point(p.x(), log(p.y())))
-                            .toArray(TableFunction.Point[]::new));
-            double[] params = PolynomialApproximator.approximate(func, 1);
-            a = exp(params[0]);
-            b = params[1];
-        }
-
-        @Override
-        public double[] getParams() {
-            return new double[]{a, b};
-        }
-
-        @Override
-        public double at(double x) {
-            return a * exp(b * x);
-        }
+    public final Point[] getApproximatedPoints() {
+        Point[] points = Arrays.stream(func.points()).map(p -> {
+            double y_ = at(p.x());
+            return new Point(p.x(), p.y(), y_, y_ - p.y());
+        }).toArray(Point[]::new);
+        return points;
     }
 
-    class Logarithmic implements Approximation {
-        final double a, b;
-
-        Logarithmic(TableFunction func) {
-            func = new TableFunction(
-                    Arrays.stream(func.points()).map(p ->
-                                    new TableFunction.Point(log(p.x()), p.y()))
-                            .toArray(TableFunction.Point[]::new));
-            double[] params = PolynomialApproximator.approximate(func, 1);
-            a = params[0];
-            b = params[1];
-        }
-
-        @Override
-        public double[] getParams() {
-            return new double[]{a, b};
-        }
-
-        @Override
-        public double at(double x) {
-            return a * log(x) + b;
-        }
-    }
-
-    class Power implements Approximation {
-        final double a, b;
-
-        Power(TableFunction func) {
-            func = new TableFunction(
-                    Arrays.stream(func.points()).map(p ->
-                                    new TableFunction.Point(log(p.x()), log(p.y())))
-                            .toArray(TableFunction.Point[]::new));
-            double[] params = PolynomialApproximator.approximate(func, 1);
-            a = exp(params[0]);
-            b = params[1];
-        }
-
-        @Override
-        public double[] getParams() {
-            return new double[]{a, b};
-        }
-
-        @Override
-        public double at(double x) {
-            return a * pow(x, b);
-        }
-    }
+    public record Point(double x, double y, double y_, double eps) {}
 }
