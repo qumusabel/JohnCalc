@@ -1,4 +1,4 @@
-package se.itmo.imf.equsolve.math.approximation;
+package se.itmo.imf.equsolve.math.interpolation;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,13 +23,14 @@ import com.google.android.material.transition.MaterialContainerTransform;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import se.itmo.imf.equsolve.R;
 import se.itmo.imf.equsolve.databinding.FragmentTabularBinding;
+import se.itmo.imf.equsolve.databinding.ViewFunctionFillBinding;
 import se.itmo.imf.equsolve.uiframework.AnyDecimalDigitsKeyListener;
-import se.itmo.imf.equsolve.uiframework.GraphView;
 
-public class ApproximationFragment extends Fragment {
+public class InterpolationFragment extends Fragment {
     private static final int ROWS_COUNT = 12;
 
     private FragmentTabularBinding binding;
@@ -54,8 +54,8 @@ public class ApproximationFragment extends Fragment {
 
         binding = FragmentTabularBinding.inflate(inflater, container, false);
 
-        binding.setTitle("Approximate");
-        binding.setSubtitle("Find the best approximation");
+        binding.setTitle("Interpolate");
+        binding.setSubtitle("Find a value between known points");
 
         LinearLayout xColumn = binding.xColumn;
         LinearLayout yColumn = binding.yColumn;
@@ -63,6 +63,9 @@ public class ApproximationFragment extends Fragment {
             xColumn.addView(newTextField(xColumn));
             yColumn.addView(newTextField(yColumn));
         }
+
+        binding.buttonFunction.setVisibility(View.VISIBLE);
+        binding.upperRow.setVisibility(View.VISIBLE);
 
         return binding.getRoot();
     }
@@ -75,52 +78,81 @@ public class ApproximationFragment extends Fragment {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
-        binding.buttonRun.setOnClickListener((View v) -> {
-            TableFunction func = functionFromInputs();
-            if (func.numPoints() < 8 || func.numPoints() > 12) {
-                showError("Please enter between 8 and 12 points");
-                return;
-            }
-
-            var approximator = new Approximator(func);
-
-            StringBuilder resultText = new StringBuilder("The best approximation is:\n" + approximator.getBest().describe() + "\n");
-            resultText.append("Others are:\n");
-            for (Approximation approximation : approximator.getAll()) {
-                if (approximation != approximator.getBest()) {
-                    resultText.append(approximation.describe()).append("\n");
-                }
-            }
-
-            var content = getLayoutInflater().inflate(R.layout.fragment_results, null);
-            ((TextView) content.findViewById(R.id.results_text)).setText(resultText.toString());
-
-            var graphView = (GraphView) content.findViewById(R.id.results_graph);
-            graphView.reloadAndRun(() -> {
-                for (var approximation: approximator.getAll()) {
-                    if (approximation != approximator.getBest()) {
-                        graphView.plotFunction(approximation.getJessieCode(), requireContext().getColor(R.color.md_theme_secondaryFixedDim));
-                    }
-                }
-                graphView.plotFunction(approximator.getBest().getJessieCode(), requireContext().getColor(R.color.md_theme_tertiary_mediumContrast));
-
-                double xMin = Arrays.stream(func.points()).mapToDouble(p -> p.x()).min().getAsDouble();
-                double xMax = Arrays.stream(func.points()).mapToDouble(p -> p.x()).max().getAsDouble();
-                double yMin = Arrays.stream(func.points()).mapToDouble(p -> p.y()).min().getAsDouble();
-                double yMax = Arrays.stream(func.points()).mapToDouble(p -> p.y()).max().getAsDouble();
-                double r = 1.1 * Math.max(xMax - xMin, yMax - yMin);
-                graphView.zoomOxy((xMin + xMax) / 2, (yMin + yMax) / 2, r);
-            });
+        binding.buttonFunction.setOnClickListener((View v) -> {
+            var formBinding = ViewFunctionFillBinding.inflate(getLayoutInflater(), null, false);
+            setInputType(formBinding.fillA, true, true);
+            setInputType(formBinding.fillB, true, true);
+            setInputType(formBinding.fillN, false, false);
+            formBinding.selectFunction.setSimpleItems(Arrays.stream(Function.INSTANCES).map(Function::expr).toArray(String[]::new));
 
             var dialog = new MaterialAlertDialogBuilder(requireContext())
-                    .setIcon(R.drawable.baseline_check_24)
-                    .setTitle("Results")
-                    .setView(content)
+                    .setTitle("Use a function")
+                    .setIcon(R.drawable.baseline_ssid_chart_24)
+                    .setView(formBinding.getRoot())
+                    .setPositiveButton("OK", (_dialog, which) -> {
+                        double a = textInputToDouble(formBinding.fillA);
+                        double b = textInputToDouble(formBinding.fillB);
+                        int n = (int) (double) textInputToDouble(formBinding.fillN);
+                        if (n < 2) {
+                            return;
+                        }
+
+                        String selectedExpr = formBinding.selectFunction.getText().toString();
+                        if (selectedExpr.isEmpty()) {
+                            return;
+                        }
+                        Function selected = Arrays.stream(Function.INSTANCES).filter(f -> f.expr().equals(selectedExpr)).findFirst().get();
+                        TableFunction func = selected.evalToTable(a, b, n);
+                        fillFunction(func);
+                    })
                     .create();
             showDialog(dialog);
         });
 
+        binding.selectMethod.setSimpleItems(new String[]{"Lagrange", "Newton", "Gauss"});
+
+        binding.buttonRun.setOnClickListener((View v) -> {
+            TableFunction func = functionFromInputs();
+            Interpolation interpolation = switch (binding.selectMethod.getText().toString()) {
+                case "Lagrange" -> new Interpolations.Lagrange(func);
+                case "Newton" -> new Interpolations.Newton(func);
+                case "Gauss" -> new Interpolations.Gauss(func);
+                default -> null;
+            };
+            if (interpolation == null) {
+                return;
+            }
+            if (textInputToDouble(binding.inputX) == null) {
+                return;
+            }
+
+            double x = textInputToDouble(binding.inputX);
+            double value;
+            try {
+                value = interpolation.at(x);
+            } catch (RuntimeException e) {
+                showError(e.getMessage());
+                return;
+            }
+
+            String result = "f(x) = " + value;
+            if (!interpolation.willBePreciseAt(x)) {
+                result += "\nResult not precise, choose another x or nodes";
+            }
+
+            showDialog("Result", result, false);
+        });
+
         binding.buttonClear.setOnClickListener((View v) -> clearInputs());
+    }
+
+    private void fillFunction(TableFunction func) {
+        clearInputs();
+        for (int i = 0; i < func.numPoints(); i++) {
+            TableFunction.Point p = func.points()[i];
+            ((TextInputLayout) binding.xColumn.getChildAt(i+1)).getEditText().setText(String.valueOf(p.x()));
+            ((TextInputLayout) binding.yColumn.getChildAt(i+1)).getEditText().setText(String.valueOf(p.y()));
+        }
     }
 
     private TableFunction functionFromInputs() {
@@ -147,7 +179,7 @@ public class ApproximationFragment extends Fragment {
         }
     }
 
-    private Double textInputToDouble(TextInputLayout textInputLayout) {
+    private static Double textInputToDouble(TextInputLayout textInputLayout) {
         EditText et = textInputLayout.getEditText();
         if (et.getText() == null) {
             return null;
@@ -169,12 +201,16 @@ public class ApproximationFragment extends Fragment {
         layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
         textInputLayout.setLayoutParams(layoutParams);
 
-        EditText et = textInputLayout.getEditText();
-
-        et.setKeyListener(new AnyDecimalDigitsKeyListener(true, true));
-        et.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER);
+        setInputType(textInputLayout, true, true);
 
         return textInputLayout;
+    }
+
+    private void setInputType(TextInputLayout textInputLayout, boolean sign, boolean decimal) {
+        EditText et = textInputLayout.getEditText();
+
+        et.setKeyListener(new AnyDecimalDigitsKeyListener(sign, decimal));
+        et.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER);
     }
 
     protected void showError(String message) {

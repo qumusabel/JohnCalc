@@ -49,6 +49,7 @@
                 tools:title="@{`Approximate a function`}" />
 
             <include
+                android:id="@+id/menuInterpolate"
                 layout="@layout/view_mainmenucard"
                 tools:labNo="@{`5`}"
                 tools:title="@{`Interpolate a function`}" />

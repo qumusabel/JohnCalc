@@ -68,11 +68,6 @@
                             android:layout_height="wrap_content"
                             android:text="x" />
 
-                        <include
-                            layout="@layout/view_textfield"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -87,48 +82,125 @@
                             android:layout_height="wrap_content"
                             android:text="y" />
 
-                        <include
-                            layout="@layout/view_textfield"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
                     </LinearLayout>
                 </LinearLayout>
 
             </ScrollView>
 
-            <Button
-                android:id="@+id/button_run"
-                style="?attr/materialButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:enabled="true"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:text="Run"
-                app:icon="@drawable/baseline_calculate_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <LinearLayout
+                android:id="@+id/upperRow"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                tools:layout_editor_absoluteX="8dp">
 
-            <Button
-                android:id="@+id/button_clear"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectMethodLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="2"
+                    android:hint="Method"
+                    app:hintEnabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/solve_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textFieldsHolder">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/selectMethod"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Method"
+                        android:inputType="none"
+                        android:paddingVertical="0dp"
+                        tools:text="Bisection Method"
+                        tools:visibility="visible" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_x"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:hint="x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawablePadding="-10dp"
+                        android:gravity="center"
+                        android:paddingHorizontal="2dp"
+                        android:paddingVertical="0dp"
+                        android:singleLine="true"
+                        tools:visibility="visible" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:enabled="true"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:text="Clear"
-                app:icon="@drawable/baseline_clear_24"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_run" />
+                tools:layout_editor_absoluteX="8dp">
+
+                <Button
+                    android:id="@+id/button_run"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:enabled="true"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Run"
+                    app:icon="@drawable/baseline_calculate_24" />
+
+
+                <Button
+                    android:id="@+id/button_clear"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:enabled="true"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Clear"
+                    app:icon="@drawable/baseline_clear_24" />
+
+                <Button
+                    android:visibility="gone"
+                    android:id="@+id/button_function"
+                    style="?attr/materialIconButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:enabled="true"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Function"
+                    app:icon="@drawable/baseline_ssid_chart_24" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
