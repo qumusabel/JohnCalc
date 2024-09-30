@@ -28,7 +28,7 @@ public class GraphView extends WebView {
 
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     private void init() {
-        setOnTouchListener((View v, MotionEvent event) -> true);
+        // setOnTouchListener((View v, MotionEvent event) -> true);
 
         WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);

@@ -13,6 +13,7 @@ import com.google.android.material.transition.Hold;
 
 import se.itmo.imf.equsolve.databinding.FragmentMainBinding;
 import se.itmo.imf.equsolve.math.approximation.ApproximationFragment;
+import se.itmo.imf.equsolve.math.differential_equation.DifferentialEquationFragment;
 import se.itmo.imf.equsolve.math.integral.IntegralFragment;
 import se.itmo.imf.equsolve.math.interpolation.InterpolationFragment;
 import se.itmo.imf.equsolve.math.single_equation.SingleFragment2;
@@ -51,6 +52,7 @@ public class MainFragment extends Fragment {
         binding.menuIntegrate.menuCard.setOnClickListener(v -> openFragment(new IntegralFragment(), v));
         binding.menuApproximate.menuCard.setOnClickListener(v -> openFragment(new ApproximationFragment(), v));
         binding.menuInterpolate.menuCard.setOnClickListener(v -> openFragment(new InterpolationFragment(), v));
+        binding.menuDifferential.menuCard.setOnClickListener(v -> openFragment(new DifferentialEquationFragment(), v));
     }
 
     private void openFragment(Fragment fragment, View sharedElement) {

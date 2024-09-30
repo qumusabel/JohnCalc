@@ -55,6 +55,7 @@
                 tools:title="@{`Interpolate a function`}" />
 
             <include
+                android:id="@+id/menuDifferential"
                 layout="@layout/view_mainmenucard"
                 tools:labNo="@{`6`}"
                 tools:title="@{`Differential equation`}" />

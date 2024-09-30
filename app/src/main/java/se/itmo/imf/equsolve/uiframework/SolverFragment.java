@@ -145,7 +145,7 @@ public abstract class SolverFragment extends Fragment {
         showDialog(dialog);
     }
 
-    private void showDialog(AlertDialog dialog) {
+    protected void showDialog(AlertDialog dialog) {
         var statusBarColor = requireActivity().getWindow().getStatusBarColor();
         var window = dialog.getWindow();
 
